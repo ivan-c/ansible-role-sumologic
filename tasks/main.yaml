@@ -1,0 +1,30 @@
+---
+- name: Ensure dependencies installed
+  apt:
+    name: "{{ packages }}"
+  vars:
+    packages:
+      - rsyslog
+      - rsyslog-gnutls
+
+- name: Create cert directory
+  file:
+    path: "{{ sumologic_cert_path }}"
+    state: directory
+
+- name: Download Sumo Logic certificate
+  get_url:
+    url: https://www.digicert.com/CACerts/DigiCertHighAssuranceEVRootCA.crt
+    dest: "{{ sumologic_cert_path }}/digicert_ca.der"
+
+- name: Convert cert from DER to PEM format
+  command: "openssl x509 -inform der -in digicert_ca.der -out {{ sumologic_cert }}"
+  args:
+    chdir: "{{ sumologic_cert_path }}"
+    creates: "{{ sumologic_cert_path }}/{{ sumologic_cert }}"
+
+- name: Install Sumo Logic config
+  template:
+    src: 55-sumologic.conf.j2
+    dest: /etc/rsyslog.d/25-sumologic.conf
+  notify: Restart rsyslog

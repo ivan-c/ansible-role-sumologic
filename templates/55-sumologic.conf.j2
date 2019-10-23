@@ -1,0 +1,27 @@
+# Forward syslog to Sumo Logic hosted syslog
+# https://help.sumologic.com/03Send-Data/Sources/02Sources-for-Hosted-Collectors/Cloud-Syslog-Source
+# {{ ansible_managed }}
+
+# Setup disk assisted queues# Setup disk assisted queues
+$WorkDirectory /var/spool/rsyslog     # where to place spool files
+$ActionQueueFileName sumoForward      # unique name prefix for spool files
+$ActionQueueMaxDiskSpace 1g           # 1gb space limit (use as much as possible)
+$ActionQueueSaveOnShutdown on         # save messages to disk on shutdown
+$ActionQueueType LinkedList           # run asynchronously
+$ActionResumeRetryCount -1            # infinite retries if host is down
+
+# RsyslogGnuTLS
+$DefaultNetstreamDriverCAFile {{ sumologic_cert_path }}/{{ sumologic_cert }}
+
+
+template(name="SumoFormat" type="string" string="<%pri%>%protocol-version% %timestamp:::date-rfc3339% %HOSTNAME% %app-name% %procid% %msgid% [{{ sumologic_token }}] %msg%\n")
+
+action(type="omfwd"
+    protocol="tcp"
+    target="syslog.collection.{{ sumologic_region }}.sumologic.com"
+    port="6514"
+    template="SumoFormat"
+    StreamDriver="gtls"
+    StreamDriverMode="1"
+    StreamDriverAuthMode="x509/name"
+    StreamDriverPermittedPeers="syslog.collection.*.sumologic.com")

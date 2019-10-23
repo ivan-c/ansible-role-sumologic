@@ -1,0 +1,6 @@
+---
+sumologic_token: TOKEN
+sumologic_region: us2
+
+sumologic_cert_path: /etc/rsyslog.d/keys/ca.d
+sumologic_cert: digicert_ca.crt
