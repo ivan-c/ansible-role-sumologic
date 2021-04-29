@@ -1,0 +1,19 @@
+version: 2
+updates:
+- package-ecosystem: pip
+  directory: "/"
+  schedule:
+    interval: daily
+  open-pull-requests-limit: 10
+  allow:
+  - dependency-type: direct
+  - dependency-type: indirect
+  ignore:
+  - dependency-name: molecule
+    versions:
+    - 3.2.2
+    - 3.2.3
+    - 3.2.4
+  - dependency-name: ansible
+    versions:
+    - 2.9.5
