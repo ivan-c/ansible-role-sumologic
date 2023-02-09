@@ -1,0 +1,11 @@
+# https://ansible-lint.readthedocs.io/configuring/
+
+exclude_paths:
+  # TODO remove when updated to latest version of molecule
+  - molecule/
+
+skip_list:
+  # TODO remove note when fixed
+  # this rule is not correctly skipped
+  # https://github.com/ansible/ansible-compat/issues/78
+  - role-name
