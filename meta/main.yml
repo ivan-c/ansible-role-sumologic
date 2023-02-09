@@ -1,9 +1,11 @@
 ---
 galaxy_info:
+  role_name: sumologic
+  namespace: ivanc
   description: rsyslog config for Sumo Logic Hosted Collector
   author: Ivan Cvitkovic
   license: BSD
-  min_ansible_version: 2.4
+  min_ansible_version: "2.4"
   galaxy_tags: []
   platforms:
     - name: Debian
